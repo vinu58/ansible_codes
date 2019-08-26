@@ -1,0 +1,39 @@
+---
+- hosts: Dev_server
+  user: ubuntu
+  sudo: yes
+  tasks:
+    - name: Install Nginx in Dev environment
+      apt: pkg=nginx state=present update_cache=true force_apt_get=true
+      notify:
+         - start nginx
+
+  handlers:
+    - name: start nginx
+      service: name=nginx state=started
+
+- hosts: QA_server
+  user: ubuntu
+  sudo: yes
+  tasks:
+    - name: Install java service
+      apt: pkg=default-jdk state=present update_cache=true force_apt_get=true
+      notify:
+         - Install jdk
+
+  handlers:
+        - name: Install jdk
+          service: name=default-jdk state=present
+
+- hosts: QA_server
+  user: ubuntu
+  sudo: yes
+  tasks:
+    - name: Install Tomcat in QA environment
+      apt: pkg=tomcat8 state=present update_cache=true force_apt_get=true
+      notify:
+         - start Tomcat
+
+  handlers:
+     - name: start Tomcat
+       service: name=tomcat8 state=started
