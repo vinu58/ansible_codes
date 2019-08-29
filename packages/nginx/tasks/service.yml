@@ -1,0 +1,5 @@
+---
+# tasks file for apache
+
+- name: start nginx server
+  service: name=nginx state=started

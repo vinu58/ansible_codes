@@ -1,0 +1,5 @@
+---
+#install apache
+
+- name: installing nginx server
+  apt: pkg=nginx state=present update_cache=true force_apt_get=true

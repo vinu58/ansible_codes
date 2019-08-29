@@ -1,0 +1,4 @@
+---
+#install apache
+- name: installing tomcat server
+  apt: pkg=tomcat8 state=present update_cache=true force_apt_get=true

@@ -1,0 +1,13 @@
+---
+- hosts: Development
+  become: true
+  user: ubuntu
+  roles:
+   - packages/apache
+   - packages/tomcat
+
+- hosts: QA_server
+  become: true
+  user: ubuntu
+  roles:
+   - packages/nginx

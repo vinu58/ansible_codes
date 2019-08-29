@@ -1,0 +1,8 @@
+---
+# vars file for automation
+   instance_type: t2.micro
+   security_group: Dev_servers
+   image: ami-07d0cf3af28718ef8
+   region: us-east-1
+   keypair: Testingcode
+   count: 1

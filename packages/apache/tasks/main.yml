@@ -1,0 +1,8 @@
+---
+# tasks file for automatioin
+
+#tasks:
+- include: install.yml
+- include: configure.yml
+- include: service.yml
+

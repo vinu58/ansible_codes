@@ -1,0 +1,5 @@
+---
+# tasks file for apache
+- name: start Tomcat server
+  service: name=tomcat8 state=started
+

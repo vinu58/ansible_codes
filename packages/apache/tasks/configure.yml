@@ -1,0 +1,9 @@
+---
+
+# Configuring apache2
+
+- name: create the webpage index.html
+  copy: src=index.html dest=/var/www/html/index.html
+
+- name: copy the image resource
+  copy: src=Blue_marble_2015.jpg dest=/var/www/html/Blue_marble_2015.jpg

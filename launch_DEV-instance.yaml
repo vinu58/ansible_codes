@@ -3,7 +3,7 @@
     hosts: local
     connection: local
     gather_facts: False
-    tags: Dev_servers
+    tags: Development
     # Necessary Variables for creating/provisioning the EC2 Instance
     vars:
       instance_type: t2.micro
@@ -72,3 +72,29 @@
         args:
           tags:
             Name: Dev_server
+
+# This play targets the new host group
+  - name: Configure instance
+    hosts: Development
+    remote_user: ubuntu
+    sudo: yes
+
+  # Do some package installation stuff on provisioned instance ....
+
+    tasks:
+      - name: Install list of packages
+        apt: name={{ item }} state=installed
+        with_items:
+          - python-pip
+          - python-dev
+
+    tasks:
+      - name: Update repositories
+        become: true
+        apt:
+            update_cache: yes  
+      - name: Upgrade packages   
+        apt: 
+            upgrade: dist
+      - name: build essential packages
+        apt: pkg=build-essential state=installed

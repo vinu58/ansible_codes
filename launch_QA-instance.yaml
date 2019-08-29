@@ -3,15 +3,16 @@
     hosts: local
     connection: local
     gather_facts: False
-    tags: QA_servers
+    tags: Development
     # Necessary Variables for creating/provisioning the EC2 Instance
     vars:
       instance_type: t2.micro
-      security_group: QA_servers
+      security_group: Dev_servers
       image: ami-07d0cf3af28718ef8
       region: us-east-1
       keypair: Testingcode
-      count: 2
+      name_tag: QA
+      count: 1
 
     # Task that will be used to Launch/Create an EC2 Instance
     tasks:
@@ -49,22 +50,51 @@
 
       - name: Add the newly created EC2 instance(s) to the local host group (located inside the directory)
         local_action: lineinfile 
-                      dest="./hosts" 
+                      dest="/etc/ansible/hosts" 
                       regexp={{ item.public_ip }} 
-                      insertafter="[QA_server]" line={{ item.public_ip }}
-        with_items: "{{ ec2.instances }}"
+                      insertafter="[{{name_tag}}]" line={{ item.public_ip }}
+        with_items: "{{  ec2.instances }}"
 
+      - name: Add new instances to host group
+        add_host: hostname={{ item.public_ip }} groupname={{ name_tag }}
+        with_items: "{{ ec2.instances }}"
 
       - name: Wait for SSH to come up
         local_action: wait_for 
                       host={{ item.public_ip }} 
                       port=22 
                       state=started
-        with_items: "{{ ec2.instances }}"
+        with_items: "{{ ec2.instances }}" 
 
       - name: Add tag to Instance(s)
         local_action: ec2_tag resource={{ item.id }} region={{ region }} state=present
-        with_items: "{{ ec2.instances }}"
+        with_items:  "{{ ec2.instances }}"
         args:
           tags:
             Name: QA_server
+
+# This play targets the new host group
+  - name: Configure instance
+    hosts: QA
+    remote_user: ubuntu
+    sudo: yes
+
+  # Do some package installation stuff on provisioned instance ....
+
+    tasks:
+      - name: Install list of packages
+        apt: name={{ item }} state=installed
+        with_items:
+          - python-pip
+          - python-dev
+
+    tasks:
+      - name: Update repositories
+        become: true
+        apt:
+            update_cache: yes  
+      - name: Upgrade packages   
+        apt: 
+            upgrade: dist
+      - name: build essential packages
+        apt: pkg=build-essential state=installed

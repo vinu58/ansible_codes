@@ -1,0 +1,6 @@
+---
+# handlers file for automation
+
+# resarting server
+- name: restart tomcat8 service
+  service: name=tomcat8 state=restarted

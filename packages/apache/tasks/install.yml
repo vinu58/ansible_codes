@@ -1,0 +1,4 @@
+---
+#install apache
+- name: installing apache2 server
+  apt: pkg=apache2 state=present update_cache=true force_apt_get=true
