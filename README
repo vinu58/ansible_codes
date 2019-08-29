@@ -1,1 +1,8 @@
 ansible_codes
+To Launch instance under Development
+ansible-playbook -i hosts launch_DEV-instance.yaml --private-key=********.pem
+This will configure EC2 instance along with necessary packages 
+
+Once EC2 instance got launched run the command to customize the environment 
+ansible-playbook -i hosts automation.yaml --private-key=************.pem
+This will configure the packages specified in the roles 
